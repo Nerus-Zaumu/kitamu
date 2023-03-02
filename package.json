@@ -1,0 +1,23 @@
+{
+  "name": "kitamu",
+  "version": "1.0.0",
+  "description": "RESTAURANT SASS",
+  "scripts": {
+    "admin:start": "pnpm -F admin run start",
+    "client:start": "pnpm -F client run start",
+    "api:start": "pnpm -F api run start",
+    "mobile:start": "pnpm -F mobile-store run start",
+    "app:start": "pnpm -F admin run start && pnpm -F client run start && pnpm -F api run start && pnpm -F mobile-store run start && pnpm -F admin run start && pnpm -F client run start && pnpm -F api run start && pnpm -F mobile-store run start"
+  },
+  "dependencies": {
+  },
+  "workspaces": [
+    "admin",
+    "client",
+    "api",
+    "mobile-store"
+  ],
+  "keywords": [],
+  "author": "Yimnai Nerus Zaumu",
+  "license": "MIT"
+}
