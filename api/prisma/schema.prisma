@@ -1,0 +1,163 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model account {
+  id        String @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  role Role @default(CLIENT)
+  user client?
+  store store?
+  
+}
+
+model client {
+  id        String @id @default(uuid())
+  fullName  String? @unique
+  image Bytes?
+  age Int?
+  account account? @relation(fields: [accountId], references: [id])
+  accountId String @unique
+  profile profile?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  order order? @relation(fields: [orderId], references: [id])
+  orderId String @unique
+  ratings rating[]
+  
+}
+
+model store {
+  id        String @id @default(uuid())
+  name      String
+  logo Bytes @unique
+  description String 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  profile profile?
+  subscription subscription?
+  rating rating?
+  account account @relation(fields: [accountId], references: [id])
+  accountId String @unique
+  order order @relation(fields: [orderId], references: [id])
+  orderId String @unique
+  
+}
+
+model profile {
+  id        String @id @default(uuid())
+  type Role 
+  address String 
+  user client @relation(fields: [userId], references: [id])
+  userId String @unique
+  store store @relation(fields: [storeId], references: [id])
+  storeId String @unique
+  
+}
+
+model meal {
+  id        String @id @default(uuid())
+  name      String
+  thumbnail Bytes @unique
+  description String
+  discount Float @default(0.0)
+  price Float @default(0.0)
+  Order order[]
+  
+}
+
+model order {
+  id        String  @id  @default(uuid())
+  cost Float @default(0.0)
+  status OrderStatus @default(UNORDERED)
+  user client?
+  meals meal[]
+  store store?
+  createdAt DateTime @default(now())
+  payment payment?
+  
+}
+
+model payment {
+  id        String @id @default(uuid())
+  type PaymentType @default(PAYPAL)
+  amount Float @default(0.0)
+  order order? @relation(fields: [orderId], references: [id])
+  orderId String @unique
+  
+}
+
+model subscription {
+  id        String  @id  @default(uuid())
+  period SubscriptionPeriod @default(MONTHLY)
+  amount SubscriptionPrice @default(MONTHLY)
+  store store @relation(fields: [storeId], references: [id])
+  storeId String @unique
+  
+}
+
+model rating {
+  id        String @id @default(uuid())
+  rating RatingType
+  raters client[]
+  store store @relation(fields: [storeId], references: [id])
+  storeId String @unique
+  
+}
+
+
+enum Role {
+  CLIENT
+  ADMIN
+  STORE
+  
+}
+
+enum SubscriptionPeriod {
+  MONTHLY
+  QUARTERLY
+  HALFYEARLY
+  YEARLY
+  
+}
+
+enum SubscriptionPrice {
+  MONTHLY @map("1000")
+  QUARTERLY @map("2500")
+  HALFYEARLY @map("4000")
+  YEARLY @map("6000")
+  
+}
+
+enum OrderStatus {
+  UNORDERED
+  PENDING
+  CANCELLED
+  COMPLETED
+  
+}
+
+enum PaymentType {
+  PAYPAL
+  CREDIT_CARD
+  MOBILE_PAYMENT
+  
+}
+
+enum RatingType {
+  BAD
+  MEDIOCRE
+  NORMAL
+  GOOD
+  EXCELLENT
+  
+}
