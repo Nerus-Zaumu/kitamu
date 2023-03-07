@@ -11,17 +11,16 @@ datasource db {
 }
 
 model account {
-  id        String @id @default(uuid())
+  id        String  @id @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  role Role @default(CLIENT)
-  user client?
+  role Role @default(CUSTOMER)
+  user customer?
   store store?
-  
 }
 
-model client {
-  id        String @id @default(uuid())
+model customer {
+  id        String @id @default(uuid()) @unique
   fullName  String? @unique
   image Bytes?
   age Int?
@@ -33,11 +32,10 @@ model client {
   order order? @relation(fields: [orderId], references: [id])
   orderId String @unique
   ratings rating[]
-  
 }
 
 model store {
-  id        String @id @default(uuid())
+  id        String @id @default(uuid()) @unique
   name      String
   logo Bytes @unique
   description String 
@@ -50,14 +48,13 @@ model store {
   accountId String @unique
   order order @relation(fields: [orderId], references: [id])
   orderId String @unique
-  
 }
 
 model profile {
-  id        String @id @default(uuid())
+  id        String @id @default(uuid()) @unique
   type Role 
   address String 
-  user client @relation(fields: [userId], references: [id])
+  user customer @relation(fields: [userId], references: [id])
   userId String @unique
   store store @relation(fields: [storeId], references: [id])
   storeId String @unique
@@ -65,7 +62,7 @@ model profile {
 }
 
 model meal {
-  id        String @id @default(uuid())
+  id        String @id @default(uuid()) @unique
   name      String
   thumbnail Bytes @unique
   description String
@@ -76,50 +73,45 @@ model meal {
 }
 
 model order {
-  id        String  @id  @default(uuid())
+  id        String  @id  @default(uuid()) @unique
   cost Float @default(0.0)
   status OrderStatus @default(UNORDERED)
-  user client?
+  user customer?
   meals meal[]
   store store?
   createdAt DateTime @default(now())
   payment payment?
-  
 }
 
 model payment {
-  id        String @id @default(uuid())
+  id        String @id @default(uuid()) @unique
   type PaymentType @default(PAYPAL)
   amount Float @default(0.0)
   order order? @relation(fields: [orderId], references: [id])
   orderId String @unique
-  
 }
 
 model subscription {
-  id        String  @id  @default(uuid())
+  id        String  @id  @default(uuid()) @unique
   period SubscriptionPeriod @default(MONTHLY)
   amount SubscriptionPrice @default(MONTHLY)
   store store @relation(fields: [storeId], references: [id])
   storeId String @unique
-  
 }
 
 model rating {
-  id        String @id @default(uuid())
+  id        String @id @default(uuid()) @unique
   rating RatingType
-  raters client[]
+  raters customer[]
   store store @relation(fields: [storeId], references: [id])
   storeId String @unique
-  
 }
 
 
 enum Role {
-  CLIENT
+  CUSTOMER
   ADMIN
   STORE
-  
 }
 
 enum SubscriptionPeriod {
@@ -127,7 +119,6 @@ enum SubscriptionPeriod {
   QUARTERLY
   HALFYEARLY
   YEARLY
-  
 }
 
 enum SubscriptionPrice {
@@ -135,7 +126,6 @@ enum SubscriptionPrice {
   QUARTERLY @map("2500")
   HALFYEARLY @map("4000")
   YEARLY @map("6000")
-  
 }
 
 enum OrderStatus {
@@ -143,14 +133,12 @@ enum OrderStatus {
   PENDING
   CANCELLED
   COMPLETED
-  
 }
 
 enum PaymentType {
   PAYPAL
   CREDIT_CARD
   MOBILE_PAYMENT
-  
 }
 
 enum RatingType {
@@ -159,5 +147,4 @@ enum RatingType {
   NORMAL
   GOOD
   EXCELLENT
-  
 }

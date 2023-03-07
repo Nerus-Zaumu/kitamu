@@ -25,9 +25,6 @@ let AuthController = class AuthController {
     createCustomer(clientPayload) {
         return this.authService.createClientAccount(clientPayload);
     }
-    confirmSignup(confirmation_url, baseUrl) {
-        return this.authService.confirmSignup(baseUrl, confirmation_url);
-    }
     findAll() {
         return this.authService.findAll();
     }
@@ -48,14 +45,6 @@ __decorate([
     __metadata("design:paramtypes", [create_auth_dto_1.AccountDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "createCustomer", null);
-__decorate([
-    (0, common_1.Post)('confirm-signup'),
-    __param(0, (0, common_1.Query)()),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, create_auth_dto_1.AccountDto]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "confirmSignup", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),

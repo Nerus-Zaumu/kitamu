@@ -17,7 +17,6 @@ export declare class AuthController {
         error?: undefined;
         status?: undefined;
     }>;
-    confirmSignup(confirmation_url: string, baseUrl: AccountDto): Promise<void>;
     findAll(): string;
     findOne(id: string): string;
     update(id: string, updateAuthDto: UpdateAuthDto): string;

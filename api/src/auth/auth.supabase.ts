@@ -9,8 +9,4 @@ export class SupabaseService {
     this.configService.get<string>('SUPABASE_URL'),
     this.configService.get<string>('SUPABASE_KEY'),
   );
-
-  watchForAuthStateChanges(callback: (event: string, session: any) => void) {
-    return this.supabase.auth.onAuthStateChange(callback);
-  }
 }

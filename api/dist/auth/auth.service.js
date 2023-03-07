@@ -18,17 +18,6 @@ let AuthService = class AuthService {
         this.supabaseService = supabaseService;
         this.prismaService = prismaService;
     }
-    async signUpWithEmail(email) {
-        const { error } = await this.supabaseService.supabase.auth.signUp({
-            email: email,
-        });
-        if (error) {
-            console.log(error);
-        }
-        else {
-            console.log('User created');
-        }
-    }
     async createClientAccount(clientDto) {
         const { data, error } = await this.supabaseService.supabase.auth.signUp({
             email: clientDto.email,
@@ -43,11 +32,40 @@ let AuthService = class AuthService {
         }
         return {
             success: true,
-            message: 'OTP sent to your email',
+            message: 'Confirmation link sent to your email',
         };
     }
-    async confirmSignup(otp) {
-        const confirmOtp = await this.supabaseService.supabase;
+    async loginClientAccount(clientDto) {
+        const { data, error } = await this.supabaseService.supabase.auth.signInWithPassword({
+            email: clientDto.email,
+            password: clientDto.password,
+        });
+        if (error) {
+            return {
+                type: error.name,
+                error: error.message,
+                status: error.status,
+            };
+        }
+        return {
+            success: true,
+            message: 'Login successful',
+            session: data.session,
+        };
+    }
+    async logoutClientAccount() {
+        const logout = await this.supabaseService.supabase.auth.signOut();
+        if (logout.error) {
+            return {
+                type: logout.error.name,
+                error: logout.error.message,
+                status: logout.error.status,
+            };
+        }
+        return {
+            success: true,
+            message: 'Logout successful',
+        };
     }
     findAll() {
         return `This action returns all auth`;

@@ -18,9 +18,6 @@ let SupabaseService = class SupabaseService {
         this.configService = configService;
         this.supabase = (0, supabase_js_1.createClient)(this.configService.get('SUPABASE_URL'), this.configService.get('SUPABASE_KEY'));
     }
-    watchForAuthStateChanges(callback) {
-        return this.supabase.auth.onAuthStateChange(callback);
-    }
 };
 SupabaseService = __decorate([
     (0, common_1.Injectable)(),

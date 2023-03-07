@@ -1,9 +1,8 @@
 import { PrismaService } from './../prisma/prisma.service';
 import { SupabaseService } from './auth.supabase';
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { AccountDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
-import axios from 'axios';
 
 @Injectable()
 export class AuthService {
@@ -26,7 +25,42 @@ export class AuthService {
     }
     return {
       success: true,
-      message: 'OTP sent to your email',
+      message: 'Confirmation link sent to your email',
+    };
+  }
+
+  async loginClientAccount(clientDto: AccountDto) {
+    const { data, error } =
+      await this.supabaseService.supabase.auth.signInWithPassword({
+        email: clientDto.email,
+        password: clientDto.password,
+      });
+    if (error) {
+      return {
+        type: error.name,
+        error: error.message,
+        status: error.status,
+      };
+    }
+    return {
+      success: true,
+      message: 'Login successful',
+      session: data.session,
+    };
+  }
+
+  async logoutClientAccount() {
+    const logout = await this.supabaseService.supabase.auth.signOut();
+    if (logout.error) {
+      return {
+        type: logout.error.name,
+        error: logout.error.message,
+        status: logout.error.status,
+      };
+    }
+    return {
+      success: true,
+      message: 'Logout successful',
     };
   }
 
