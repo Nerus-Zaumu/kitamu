@@ -1,13 +1,5 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-} from '@nestjs/common';
+import { StoreDto } from './dto/store-auth.dto';
+import { Controller, Post, Body, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { AccountDto } from './dto/create-auth.dto';
@@ -23,23 +15,34 @@ export class AuthController {
     return this.authService.createClientAccount(clientPayload);
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
+  @Post('login')
+  login(@Body() payload: AccountDto) {
+    return this.authService.loginClientAccount(payload);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
+  @Post('logout')
+  logout() {
+    return this.authService.logoutClientAccount();
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
+  @Post('apply/store')
+  applyForStore(@Body() application: Omit<StoreDto, 'password'>) {
+    return this.authService.applyForStore(application);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+  @Post('apply/approve')
+  approveApplication(@Body() application: StoreDto) {
+    return this.authService.approveStore(application);
   }
+
+  @Post('password/forgot')
+  forgotPass(@Body('email') email: string) {
+    return this.authService.forgotPassword(email);
+  }
+
+  @Put('password/reset')
+  resetPass(@Body() payload: UpdateAuthDto) {
+    return this.authService.resetPassword(payload);
+  }
+  // jcrL(ZcVhDK)eG
 }

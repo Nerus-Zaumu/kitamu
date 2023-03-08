@@ -30,6 +30,7 @@
     "@supabase/supabase-js": "^2.10.0",
     "@types/axios": "^0.14.0",
     "axios": "link:@types/@nestjs/axios",
+    "class-validator": "^0.14.0",
     "prisma": "^4.11.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0"

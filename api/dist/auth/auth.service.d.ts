@@ -1,3 +1,4 @@
+import { StoreDto } from './dto/store-auth.dto';
 import { PrismaService } from './../prisma/prisma.service';
 import { SupabaseService } from './auth.supabase';
 import { AccountDto } from './dto/create-auth.dto';
@@ -47,6 +48,37 @@ export declare class AuthService {
         error?: undefined;
         status?: undefined;
     }>;
+    forgotPassword(email: string): Promise<{
+        type: string;
+        error: string;
+        status: number;
+        success?: undefined;
+        message?: undefined;
+    } | {
+        success: boolean;
+        message: string;
+        type?: undefined;
+        error?: undefined;
+        status?: undefined;
+    }>;
+    resetPassword(resetPasswordDto: UpdateAuthDto): Promise<{
+        type: string;
+        error: string;
+        status: number;
+        success?: undefined;
+        message?: undefined;
+    } | {
+        success: boolean;
+        message: string;
+        type?: undefined;
+        error?: undefined;
+        status?: undefined;
+    }>;
+    applyForStore(storeDto: Omit<StoreDto, 'password'>): Promise<{
+        success: boolean;
+        message: string;
+    }>;
+    approveStore(storeDto: StoreDto): Promise<void>;
     findAll(): string;
     findOne(id: number): string;
     update(id: number, updateAuthDto: UpdateAuthDto): string;

@@ -67,6 +67,56 @@ let AuthService = class AuthService {
             message: 'Logout successful',
         };
     }
+    async forgotPassword(email) {
+        const { error } = await this.supabaseService.supabase.auth.resetPasswordForEmail(email);
+        if (error) {
+            return {
+                type: error.name,
+                error: error.message,
+                status: error.status,
+            };
+        }
+        return {
+            success: true,
+            message: 'Password reset link sent to your email',
+        };
+    }
+    async resetPassword(resetPasswordDto) {
+        const { data, error } = await this.supabaseService.supabase.auth.updateUser({
+            password: resetPasswordDto.password,
+        });
+        if (error) {
+            return {
+                type: error.name,
+                error: error.message,
+                status: error.status,
+            };
+        }
+        return {
+            success: true,
+            message: 'Password reset successful',
+        };
+    }
+    async applyForStore(storeDto) {
+        const apply = await this.prismaService.store_application.create({
+            data: Object.assign({}, storeDto),
+        });
+        if (!apply) {
+            return {
+                success: false,
+                message: 'Error applying for store',
+            };
+        }
+        return {
+            success: true,
+            message: 'Store application successful. You will receive feedback as soon as your application is approved',
+        };
+    }
+    async approveStore(storeDto) {
+        const createAccount = await this.supabaseService.signUp({
+            email: storeDto.email,
+        });
+    }
     findAll() {
         return `This action returns all auth`;
     }
